@@ -1,0 +1,19 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Siarhei Shveadko
+    changes:
+        - addColumn:
+            tableName: field
+            columns:
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIMEZONE
+                  defaultValueComputed: current_timestamp
+                  constraints:
+                    nullable: false
+
+    rollback:
+        - dropColumn:
+            columnName: updated_at
+            tableName: field

@@ -1,0 +1,25 @@
+databaseChangeLog:
+  - include:
+      file: ./migrations/01-initial.yaml
+  - include:
+      file: ./migrations/02-saga-table.yaml
+  - include:
+      file: ./migrations/03-prototype-table.yaml
+  - include:
+      file: ./migrations/04-field-table.yaml
+  - include:
+      file: ./migrations/05-add-prototype-name-and-field-name-unique-constraints.yaml
+  - include:
+      file: ./migrations/06-add-field-names-field-to-prototype-table.yaml
+  - include:
+      file: ./migrations/07-reference-layout-table.yaml
+  - include:
+      file: ./migrations/08-add-updated-at-column.yaml
+  - include:
+      file: ./migrations/09-add-reference-layout-title-column.yaml
+  - include:
+      file: ./migrations/10-add-confidential-and-read-only-columns-to-field-table.yaml
+  - include:
+      file: ./migrations/11-add-mapping-table.yaml
+  - include:
+      file: ./migrations/12-add-tabular-mapping-table.yaml

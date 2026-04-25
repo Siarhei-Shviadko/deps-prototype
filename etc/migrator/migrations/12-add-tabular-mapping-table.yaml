@@ -1,0 +1,46 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Aleksandr Balykin
+    changes:
+    - createTable:
+        tableName: tabular_mapping
+        columns:
+        - column:
+            name: code
+            type: VARCHAR(100)
+            constraints:
+              primaryKey: true
+        - column:
+            name: prototype_id
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+              foreignKeyName: tabular_mapping_prototype_id_fkey
+              references: prototype(id)
+              deleteCascade: true
+        - column:
+            name: header_type
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+        - column:
+            name: headers
+            type: JSONB
+            constraints:
+              nullable: false
+        - column:
+            name: occurrence_index
+            type: INTEGER
+            constraints:
+              nullable: false
+        - column:
+            name: created_at
+            type: TIMESTAMP WITH TIMEZONE
+            defaultValueComputed: current_timestamp
+            constraints:
+              nullable: false
+
+    rollback:
+      - dropTable:
+          - tableName: tabular_mapping

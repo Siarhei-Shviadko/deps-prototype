@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Raman Salauyou
+      changes:
+        - addUniqueConstraint:
+            columnNames: name, prototype_id
+            constraintName: field_name_prototype_id_uc
+            tableName: field
+        - addUniqueConstraint:
+            columnNames: name, tenant_id
+            constraintName: prototype_name_tenant_id_uc
+            tableName: prototype
+
+      rollback:
+        - dropUniqueConstraint:
+            constraintName: field_name_prototype_id_uc
+            tableName: field
+            uniqueColumns: name, prototype_id
+        - dropUniqueConstraint:
+            constraintName: prototype_name_tenant_id_uc
+            tableName: prototype
+            uniqueColumns: name, tenant_id

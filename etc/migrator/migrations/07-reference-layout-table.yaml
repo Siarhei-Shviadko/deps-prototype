@@ -1,0 +1,34 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Alina Izvozchikova
+    changes:
+    - createTable:
+        tableName: reference_layout
+        columns:
+        - column:
+            name: id
+            type: VARCHAR(100)
+            constraints:
+              primaryKey: true
+        - column:
+            name: prototype_id
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+              foreignKeyName: prototype_id_fkey
+              references: prototype(id)
+              deleteCascade: true
+        - column:
+            name: state
+            type: VARCHAR(50)
+            constraints:
+              nullable: false
+        - column:
+            name: blob_name
+            type: VARCHAR
+            constraints:
+              nullable: false
+    rollback:
+      - dropTable:
+          - tableName: reference_layout

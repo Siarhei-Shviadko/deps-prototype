@@ -1,0 +1,59 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Illia Makarov
+    changes:
+    - createTable:
+        tableName: mapping
+        columns:
+        - column:
+            name: code
+            type: VARCHAR(100)
+            constraints:
+              primaryKey: true
+        - column:
+            name: prototype_id
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+              foreignKeyName: mapping_prototype_id_fkey
+              references: prototype(id)
+              deleteCascade: true
+        - column:
+            name: data_type_code
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+        - column:
+            name: mapping_type
+            type: VARCHAR(100)
+            constraints:
+              nullable: false
+        - column:
+            name: mapping_keys
+            type: JSONB
+            constraints:
+              nullable: false
+        - column:
+            name: created_at
+            type: TIMESTAMP WITH TIMEZONE
+            defaultValueComputed: current_timestamp
+            constraints:
+              nullable: false
+
+    rollback:
+      - dropTable:
+          - tableName: mapping
+- changeSet:
+    id: 2
+    author: Illia Makarov
+    changes:
+      # Copy data from field table to mapping table
+      sql: "
+        INSERT INTO mapping (code, prototype_id, data_type_code, mapping_type, mapping_keys, created_at)
+        SELECT
+          id, prototype_id, field_type_code, mapping_type, mapping_keys, created_at
+        FROM field;
+      "
+    rollback:
+      sql: DELETE FROM mapping WHERE true;

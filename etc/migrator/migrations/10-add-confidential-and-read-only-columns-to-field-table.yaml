@@ -1,0 +1,31 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Alina Izvozchikova
+    changes:
+    - addColumn:
+        tableName: field
+        columns:
+        - column:
+            name: confidential
+            type: BOOLEAN
+            defaultValue: false
+            constraints:
+              nullable: false
+    - addColumn:
+        tableName: field
+        columns:
+        - column:
+            name: read_only
+            type: BOOLEAN
+            defaultValue: false
+            constraints:
+              nullable: false
+
+    rollback:
+      - dropColumn:
+          columnName: confidential
+          tableName: field
+      - dropColumn:
+          columnName: read_only
+          tableName: field

@@ -1,0 +1,3 @@
+__all__ = ["PROTOTYPE_EXTRACTOR_CODE"]
+
+PROTOTYPE_EXTRACTOR_CODE: str = "prototype"

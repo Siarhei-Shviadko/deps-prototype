@@ -1,0 +1,16 @@
+databaseChangeLog:
+- changeSet:
+    id: 1
+    author: Palina Pashkouskaya
+    changes:
+        - addColumn:
+            tableName: reference_layout
+            columns:
+              - column:
+                  name: title
+                  type: VARCHAR
+
+    rollback:
+        - dropColumn:
+            columnName: title
+            tableName: reference_layout

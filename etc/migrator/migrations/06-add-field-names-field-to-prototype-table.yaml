@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Raman Salauyou
+      changes:
+        - addColumn:
+            tableName: prototype
+            columns:
+              - column:
+                  name: field_names
+                  type: JSON
+                  defaultValueComputed: "'[]'::json"
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropColumn:
+            columnName: field_names
+            tableName: prototype

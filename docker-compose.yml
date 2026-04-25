@@ -1,0 +1,16 @@
+version: "3.4"
+
+services:
+  api:
+    image: "prototype-dev"
+    container_name: "deps-prototype"
+    command: python -m deps_prototype serve
+
+  consumer:
+    image: "prototype-dev"
+    container_name: "deps-prototype-consumer"
+    command: python -m deps_prototype dispatch
+
+  migrator:
+    image: "prototype-migrator"
+    container_name: deps-prototype-migrator
