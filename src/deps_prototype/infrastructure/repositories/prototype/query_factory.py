@@ -34,7 +34,7 @@ class PrototypeQueryFactory:
         return [self._prototype_table_schema.c.id]
 
     def select_prototype_by(self, prototype_id: str, tenant_id: str) -> Select:
-        return select(self.prototype_columns).where(
+        return select(*self.prototype_columns).where(
             and_(
                 prototype_table.c.tenant_id == tenant_id,
                 prototype_table.c.id == prototype_id,
@@ -42,7 +42,7 @@ class PrototypeQueryFactory:
         )
 
     def select_prototype_id_by(self, prototype_id: str, tenant_id: str) -> Select:
-        return select(self.prototype_id_column).where(
+        return select(*self.prototype_id_column).where(
             and_(
                 prototype_table.c.tenant_id == tenant_id,
                 prototype_table.c.id == prototype_id,
@@ -77,7 +77,7 @@ class PrototypeQueryFactory:
         return filter_query.order_by(sort_expression)
 
     def _filter_prototype(self, filter_: PrototypeFilter) -> Select:  # noqa: WPS231
-        query = select(self.prototype_columns)
+        query = select(*self.prototype_columns)
 
         if filter_.tenant_id is not None:
             query = query.where(prototype_table.c.tenant_id == filter_.tenant_id)

@@ -14,7 +14,7 @@ __all__ = ["assert_tabular_mappings_equal"]
 def assert_tabular_mappings_equal(tabular_mapping: TabularMapping, raw_mapping: dict[str, Any]) -> None:
     assert raw_mapping["code"] == tabular_mapping.code
     assert raw_mapping["prototypeId"] == tabular_mapping.prototype_id()
-    assert raw_mapping["headers"] == [header.dict() for header in tabular_mapping.headers]
+    assert raw_mapping["headers"] == [header.to_dict() for header in tabular_mapping.headers]
     assert raw_mapping["headerType"] == tabular_mapping.header_type
     assert raw_mapping["occurrenceIndex"] == tabular_mapping.occurrence_index
 

@@ -7,11 +7,11 @@ __all__ = ["SerializedHeader"]
 
 class SerializedHeader(ConfiguredBaseSerializer):
     name: str
-    aliases: set[str]
+    aliases: list[str]
 
     @classmethod
     def from_model(cls, header: Header) -> "SerializedHeader":
         return cls(
             name=header.name,
-            aliases=header.aliases,
+            aliases=sorted(header.aliases),
         )
