@@ -23,8 +23,8 @@ class Header:
     def __repr__(self) -> str:
         return f"<class '{self.__class__.__name__}': {self.name = }"
 
-    def dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "name": self.name,
-            "aliases": list(self.aliases),
+            "aliases": sorted(self.aliases),
         }

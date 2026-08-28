@@ -14,28 +14,40 @@ class ReferenceLayoutRepository(IReferenceLayoutRepository):
 
     def save(self, reference_layout: ReferenceLayout) -> None:
         with self.db.connection() as conn:
-            conn.execute(self._query_factory.insert(), **ReferenceLayoutMapper.to_dict(reference_layout))
+            conn.execute(self._query_factory.insert(), ReferenceLayoutMapper.to_dict(reference_layout))
 
     def reference_layout_of_id(self, id_: str, prototype_id: str) -> ReferenceLayout | None:
         with self.db.connection() as conn:
-            raw_reference_layout = conn.execute(
-                self._query_factory.select_reference_layout_by(id_, prototype_id),
-            ).fetchone()
+            raw_reference_layout = (
+                conn.execute(
+                    self._query_factory.select_reference_layout_by(id_, prototype_id),
+                )
+                .mappings()
+                .fetchone()
+            )
             if raw_reference_layout:
                 return ReferenceLayoutMapper.from_dict(raw_reference_layout)
 
     def reference_layouts_of_ids(self, ids: list[str], prototype_id: str) -> list[ReferenceLayout]:
         with self.db.connection() as conn:
-            raw_reference_layouts = conn.execute(
-                self._query_factory.select_reference_layouts_by(ids, prototype_id),
-            ).fetchall()
+            raw_reference_layouts = (
+                conn.execute(
+                    self._query_factory.select_reference_layouts_by(ids, prototype_id),
+                )
+                .mappings()
+                .fetchall()
+            )
             return [ReferenceLayoutMapper.from_dict(reference_layout) for reference_layout in raw_reference_layouts]
 
     def reference_layouts_of_prototype(self, prototype_id: str) -> list[ReferenceLayout]:
         with self.db.connection() as conn:
-            raw_reference_layouts = conn.execute(
-                self._query_factory.select_reference_layouts_of_prototype(prototype_id),
-            ).fetchall()
+            raw_reference_layouts = (
+                conn.execute(
+                    self._query_factory.select_reference_layouts_of_prototype(prototype_id),
+                )
+                .mappings()
+                .fetchall()
+            )
             return [ReferenceLayoutMapper.from_dict(reference_layout) for reference_layout in raw_reference_layouts]
 
     def delete(self, reference_layout: ReferenceLayout) -> None:

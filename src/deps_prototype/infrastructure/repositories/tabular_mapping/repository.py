@@ -27,7 +27,7 @@ class TabularMappingRepository(ITabularMappingRepository):
         ]
 
     def get_by_code(self, code: str, prototype_id: str) -> TabularMapping | None:
-        query = select(self.columns).where(
+        query = select(*self.columns).where(
             and_(
                 self._table.c.code == code,
                 self._table.c.prototype_id == prototype_id,
@@ -35,7 +35,7 @@ class TabularMappingRepository(ITabularMappingRepository):
         )
 
         with self._db.connection() as conn:
-            raw_tabular_mapping = conn.execute(query).fetchone()
+            raw_tabular_mapping = conn.execute(query).mappings().fetchone()
 
             if raw_tabular_mapping:
                 return TabularMappingMapper.from_dict(raw_tabular_mapping)
@@ -43,12 +43,12 @@ class TabularMappingRepository(ITabularMappingRepository):
         return None
 
     def mappings_of_prototype(self, prototype_id: str) -> list[TabularMapping]:
-        query = select(self.columns).where(
+        query = select(*self.columns).where(
             self._table.c.prototype_id == prototype_id,
         )
 
         with self._db.connection() as conn:
-            raw_tabular_mappings = conn.execute(query).fetchall()
+            raw_tabular_mappings = conn.execute(query).mappings().fetchall()
 
             return [TabularMappingMapper.from_dict(raw_tabular_mapping) for raw_tabular_mapping in raw_tabular_mappings]
 
@@ -65,7 +65,7 @@ class TabularMappingRepository(ITabularMappingRepository):
         )
 
         with self._db.connection() as conn:
-            conn.execute(update_query, **TabularMappingMapper.to_dict(tabular_mapping))
+            conn.execute(update_query, TabularMappingMapper.to_dict(tabular_mapping))
 
     def delete(self, code: str, prototype_id: str) -> None:
         query = delete(self._table).where(

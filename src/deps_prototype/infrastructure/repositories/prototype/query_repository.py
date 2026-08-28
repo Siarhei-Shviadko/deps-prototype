@@ -51,14 +51,12 @@ class QueryPrototypeRepository(IQueryPrototypeRepository):
     def find_prototype_with_mappings(self, id_: str, tenant_id: str) -> PrototypeWithMappings | None:
         mapping_cte = (
             select(
-                [
-                    func.coalesce(
-                        func.json_agg(
-                            func.row_to_json(text(f"{mapping_table.name}.*")),
-                        ),
-                        text("'[]'::json"),
-                    ).label("mappings"),
-                ],
+                func.coalesce(
+                    func.json_agg(
+                        func.row_to_json(text(f"{mapping_table.name}.*")),
+                    ),
+                    text("'[]'::json"),
+                ).label("mappings"),
             )
             .where(mapping_table.c.prototype_id == id_)
             .cte("prototype_mappings")
@@ -66,25 +64,21 @@ class QueryPrototypeRepository(IQueryPrototypeRepository):
 
         tabular_mapping_cte = (
             select(
-                [
-                    func.coalesce(
-                        func.json_agg(
-                            func.row_to_json(text(f"{tabular_mapping_table.name}.*")),
-                        ),
-                        text("'[]'::json"),
-                    ).label("tabular_mappings"),
-                ],
+                func.coalesce(
+                    func.json_agg(
+                        func.row_to_json(text(f"{tabular_mapping_table.name}.*")),
+                    ),
+                    text("'[]'::json"),
+                ).label("tabular_mappings"),
             )
             .where(tabular_mapping_table.c.prototype_id == id_)
             .cte("prototype_tabular_mappings")
         )
 
         query = select(
-            [
-                *self.prototype_columns,
-                mapping_cte,
-                tabular_mapping_cte,
-            ],
+            *self.prototype_columns,
+            mapping_cte,
+            tabular_mapping_cte,
         ).where(
             and_(
                 prototype_table.c.id == id_,
@@ -93,6 +87,6 @@ class QueryPrototypeRepository(IQueryPrototypeRepository):
         )
 
         with self._db.connection() as conn:
-            row = conn.execute(query).fetchone()
+            row = conn.execute(query).mappings().fetchone()
 
         return PrototypeWithMappingsMapper.from_dict(row) if row else None

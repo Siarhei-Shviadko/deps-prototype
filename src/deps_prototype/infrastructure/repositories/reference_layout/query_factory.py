@@ -25,7 +25,7 @@ class ReferenceLayoutQueryFactory:
         ]
 
     def select_reference_layouts_by(self, ids: list[str], prototype_id: str) -> Select:
-        return select(self.reference_layout_columns).where(
+        return select(*self.reference_layout_columns).where(
             and_(
                 self._reference_layout_schema.c.prototype_id == prototype_id,
                 self._reference_layout_schema.c.id.in_(ids),
@@ -33,10 +33,12 @@ class ReferenceLayoutQueryFactory:
         )
 
     def select_reference_layouts_of_prototype(self, prototype_id: str) -> Select:
-        return select(self.reference_layout_columns).where(self._reference_layout_schema.c.prototype_id == prototype_id)
+        return select(*self.reference_layout_columns).where(
+            self._reference_layout_schema.c.prototype_id == prototype_id,
+        )
 
     def select_reference_layout_by(self, reference_layout_id: str, prototype_id: str) -> Select:
-        return select(self.reference_layout_columns).where(
+        return select(*self.reference_layout_columns).where(
             and_(
                 self._reference_layout_schema.c.prototype_id == prototype_id,
                 self._reference_layout_schema.c.id == reference_layout_id,

@@ -1,5 +1,6 @@
 from psycopg2.errorcodes import UNIQUE_VIOLATION
-from sqlalchemy.engine.base import Connection
+from sqlalchemy import func, select
+from sqlalchemy.engine import Connection
 from sqlalchemy.exc import IntegrityError
 
 from deps_prototype.domain.exceptions import InvariantViolation
@@ -21,7 +22,7 @@ class PrototypeRepository(IPrototypeRepository):
 
     def prototype_of_id(self, id_: str, tenant_id: str) -> Prototype | None:
         with self.db.connection() as conn:
-            if row := conn.execute(self._query_factory.select_prototype_by(id_, tenant_id)).fetchone():
+            if row := conn.execute(self._query_factory.select_prototype_by(id_, tenant_id)).mappings().fetchone():
                 return PrototypeMapper.from_dict(row)
             return None
 
@@ -62,7 +63,7 @@ class PrototypeRepository(IPrototypeRepository):
         query = self._query_factory.apply_filter_and_sort(filter_)
 
         with self.db.connection() as conn:
-            result = conn.execute(query.alias().count()).fetchone()
+            result = conn.execute(select(func.count()).select_from(query.subquery())).fetchone()
 
         return 0 if result is None else result[0]
 
@@ -75,7 +76,7 @@ class PrototypeRepository(IPrototypeRepository):
             )
 
         with self.db.connection() as conn:
-            prototypes = conn.execute(query).fetchall()
+            prototypes = conn.execute(query).mappings().fetchall()
 
         return [PrototypeMapper.from_dict(prototype) for prototype in prototypes]
 

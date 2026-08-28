@@ -24,10 +24,12 @@ class MappingQueryFactory:
         ]
 
     def select_mappings_of_prototype(self, prototype_id: str) -> Select:
-        return select(self.columns).where(self._table.c.prototype_id == prototype_id).order_by(self._table.c.created_at)
+        return (
+            select(*self.columns).where(self._table.c.prototype_id == prototype_id).order_by(self._table.c.created_at)
+        )
 
     def select_by_code(self, mapping_code: str, prototype_id: str) -> Select:
-        return select(self.columns).where(
+        return select(*self.columns).where(
             and_(self._table.c.prototype_id == prototype_id, self._table.c.code == mapping_code),
         )
 
